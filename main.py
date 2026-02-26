@@ -2,72 +2,65 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-# 1. Configuração da Página e Fontes Digitais
-st.set_page_config(page_title="G.U.I.M.E.L. OS", page_icon="ג", layout="centered")
+# 1. Configuração da Página (Favicon na aba do navegador)
+st.set_page_config(page_title="g.u.i.m.e.l. os", page_icon="favicon.png", layout="centered")
 
-# CSS Avançado para Cores e Estilo
+# CSS Estilizado: Letras minúsculas, Orbitron e Degradê Vibrante
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
     .stApp {
         background-color: #050505;
     }
     
-    /* Título G.U.I.M.E.L com degradê Laranja/Amarelo/Branco */
+    /* Título em degradê Laranja -> Amarelo -> Branco */
     .title-guimel {
         font-family: 'Orbitron', sans-serif;
-        font-size: 55px;
-        font-weight: bold;
+        font-size: 42px;
         background: linear-gradient(to right, #FF4B2B, #FFB100, #FFFFFF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: -10px;
-        letter-spacing: 5px;
+        text-transform: lowercase;
+        letter-spacing: 4px;
+        margin-top: 10px;
     }
 
-    /* Subtítulo com fonte tecnológica */
     .subtitle {
-        font-family: 'Rajdhani', sans-serif;
+        font-family: 'Orbitron', sans-serif;
         color: #FFB100;
         text-align: center;
-        font-size: 20px;
-        font-weight: 300;
-        text-transform: uppercase;
+        font-size: 14px;
+        text-transform: lowercase;
         letter-spacing: 2px;
-    }
-
-    /* Estilização das mensagens e inputs */
-    .stChatMessage {
-        border-radius: 15px;
-        border: 1px solid #333;
+        opacity: 0.8;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Área do Logo (Removendo molduras da imagem)
-col1, col2, col3 = st.columns([1, 2, 1])
+# 2. Centralização do Ícone (Usando favicon.png como logo central)
+col1, col2, col3 = st.columns([1, 1, 1])
 with col2:
-    if os.path.exists("logo.png"):
-        # O parâmetro 'use_container_width' mantém a proporção original
-        st.image("logo.png", use_container_width=True)
+    if os.path.exists("favicon.png"):
+        st.image("favicon.png", use_container_width=True)
     
-    # Texto do Logo com as cores solicitadas
-    st.markdown('<p class="title-guimel">ג G.U.I.M.E.L.</p>', unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">Sistemas Logísticos e Teológicos Online</p>', unsafe_allow_html=True)
+st.markdown('<p class="title-guimel">λ g.u.i.m.e.l.</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">sistemas logísticos e teológicos online</p>', unsafe_allow_html=True)
 
-# 3. Barra Lateral
+# 3. Terminal Lateral
 with st.sidebar:
-    st.markdown("<h2 style='color:#FFB100; font-family:Orbitron;'>TERMINAL</h2>", unsafe_allow_html=True)
-    api_key = st.text_input("Chave de Protocolo", type="password")
-    st.info("Aguardando autorização do servidor central...")
+    st.markdown("<h2 style='color:#FFB100; font-family:Orbitron; font-size:18px;'>terminal</h2>", unsafe_allow_html=True)
+    api_key = st.text_input("chave de protocolo", type="password")
+    if not api_key:
+        st.info("aguardando conexão...")
 
-# 4. Lógica da IA (Mantendo o modelo estável)
+# 4. Processamento de Resposta
 if api_key:
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.0-pro")
+        # Usando a versão estável para evitar erros de versão
+        model = genai.GenerativeModel("gemini-1.5-flash")
         
         if "chat" not in st.session_state:
             st.session_state.chat = model.start_chat(history=[])
@@ -76,9 +69,9 @@ if api_key:
 
         for msg in st.session_state.messages:
             with st.chat_message(msg["role"]):
-                st.markdown(msg["content"])
+                st.markdown(f"<span style='font-family:Orbitron; color:#eee;'>{msg['content']}</span>", unsafe_allow_html=True)
 
-        if prompt := st.chat_input("Comando, Senhor?"):
+        if prompt := st.chat_input("comando, senhor?"):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
@@ -89,7 +82,6 @@ if api_key:
                 st.markdown(response.text)
                 
     except Exception as e:
-        st.error(f"STATUS: Protocolo negado pelo google, aguarde o prazo de segurança. (Erro: {e})")
+        st.error(f"sistema offline: aguardando liberação da chave google. (erro: {e})")
 else:
-    st.warning("Senhor, conecte a chave para iniciar.")
-    
+    st.markdown("<br><center><p style='color:#555;'>conecte a chave para despertar o sistema.</p></center>", unsafe_allow_html=True)
