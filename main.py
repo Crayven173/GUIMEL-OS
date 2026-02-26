@@ -2,32 +2,71 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-# 1. Configuração da Página
+# 1. Configuração da Página e Fontes Digitais
 st.set_page_config(page_title="G.U.I.M.E.L. OS", page_icon="ג", layout="centered")
 
-# Estilo J.A.R.V.I.S.
-st.markdown("<style>.stApp { background-color: #0e1117; color: #ffcc00; }</style>", unsafe_allow_html=True)
+# CSS Avançado para Cores e Estilo
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
 
-# 2. Carregamento do Logotipo (Forçado)
+    .stApp {
+        background-color: #050505;
+    }
+    
+    /* Título G.U.I.M.E.L com degradê Laranja/Amarelo/Branco */
+    .title-guimel {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 55px;
+        font-weight: bold;
+        background: linear-gradient(to right, #FF4B2B, #FFB100, #FFFFFF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: -10px;
+        letter-spacing: 5px;
+    }
+
+    /* Subtítulo com fonte tecnológica */
+    .subtitle {
+        font-family: 'Rajdhani', sans-serif;
+        color: #FFB100;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    /* Estilização das mensagens e inputs */
+    .stChatMessage {
+        border-radius: 15px;
+        border: 1px solid #333;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# 2. Área do Logo (Removendo molduras da imagem)
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     if os.path.exists("logo.png"):
+        # O parâmetro 'use_container_width' mantém a proporção original
         st.image("logo.png", use_container_width=True)
-    else:
-        st.title("ג G.U.I.M.E.L.")
+    
+    # Texto do Logo com as cores solicitadas
+    st.markdown('<p class="title-guimel">ג G.U.I.M.E.L.</p>', unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">Sistemas Logísticos e Teológicos Online</p>', unsafe_allow_html=True)
 
-st.subheader("Sistemas Logísticos e Teológicos Online.")
-
-# 3. Barra Lateral e Chave
+# 3. Barra Lateral
 with st.sidebar:
-    st.title("Configurações")
+    st.markdown("<h2 style='color:#FFB100; font-family:Orbitron;'>TERMINAL</h2>", unsafe_allow_html=True)
     api_key = st.text_input("Chave de Protocolo", type="password")
+    st.info("Aguardando autorização do servidor central...")
 
-# 4. Lógica da IA (Modelo Estável)
+# 4. Lógica da IA (Mantendo o modelo estável)
 if api_key:
     try:
         genai.configure(api_key=api_key)
-        # Usando o modelo mais compatível do mundo
         model = genai.GenerativeModel("gemini-1.0-pro")
         
         if "chat" not in st.session_state:
@@ -35,24 +74,22 @@ if api_key:
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
-        # Mostrar mensagens
         for msg in st.session_state.messages:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
 
-        # Input do Senhor
         if prompt := st.chat_input("Comando, Senhor?"):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
             
-            # Resposta da IA
             response = st.session_state.chat.send_message(prompt)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
             with st.chat_message("assistant"):
                 st.markdown(response.text)
                 
     except Exception as e:
-        st.error(f"Erro de Conexão: O Google ainda não liberou o acesso. Aguarde o prazo de 5 horas. (Detalhe: {e})")
+        st.error(f"STATUS: Protocolo negado pelo google, aguarde o prazo de segurança. (Erro: {e})")
 else:
-    st.info("Senhor, por favor, insira a Chave de Protocolo na barra lateral.")
+    st.warning("Senhor, conecte a chave para iniciar.")
+    
