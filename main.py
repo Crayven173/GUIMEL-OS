@@ -2,10 +2,10 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-# 1. Configuração da Página (Favicon na aba do navegador)
-st.set_page_config(page_title="g.u.i.m.e.l. os", page_icon="favicon.png", layout="centered")
+# 1. Configuração da Página
+st.set_page_config(page_title="G.U.I.M.E.L. os", page_icon="favicon.png", layout="centered")
 
-# CSS Estilizado: Letras minúsculas, Orbitron e Degradê Vibrante
+# CSS para Tipografia Orbitron, Letras Minúsculas e Degradê
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
@@ -24,7 +24,7 @@ st.markdown("""
         text-align: center;
         text-transform: lowercase;
         letter-spacing: 4px;
-        margin-top: 10px;
+        margin-top: -10px;
     }
 
     .subtitle {
@@ -36,15 +36,23 @@ st.markdown("""
         letter-spacing: 2px;
         opacity: 0.8;
     }
+
+    /* Remove fundos de blocos de imagem do Streamlit */
+    [data-testid="stImage"] {
+        background-color: transparent !important;
+        border: none !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Centralização do Ícone (Usando favicon.png como logo central)
+# 2. Brasão Centralizado (Usando o favicon.png como solicitado)
 col1, col2, col3 = st.columns([1, 1, 1])
 with col2:
     if os.path.exists("favicon.png"):
+        # Mostra o favicon sem legendas ou bordas
         st.image("favicon.png", use_container_width=True)
-    
+
+# Texto de Identidade
 st.markdown('<p class="title-guimel">λ g.u.i.m.e.l.</p>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">sistemas logísticos e teológicos online</p>', unsafe_allow_html=True)
 
@@ -52,14 +60,12 @@ st.markdown('<p class="subtitle">sistemas logísticos e teológicos online</p>',
 with st.sidebar:
     st.markdown("<h2 style='color:#FFB100; font-family:Orbitron; font-size:18px;'>terminal</h2>", unsafe_allow_html=True)
     api_key = st.text_input("chave de protocolo", type="password")
-    if not api_key:
-        st.info("aguardando conexão...")
+    st.markdown("<hr style='border: 0.5px solid #333;'>", unsafe_allow_html=True)
 
-# 4. Processamento de Resposta
+# 4. Lógica da IA (Modelo atualizado para 1.5-flash)
 if api_key:
     try:
         genai.configure(api_key=api_key)
-        # Usando a versão estável para evitar erros de versão
         model = genai.GenerativeModel("gemini-1.5-flash")
         
         if "chat" not in st.session_state:
@@ -82,6 +88,7 @@ if api_key:
                 st.markdown(response.text)
                 
     except Exception as e:
-        st.error(f"sistema offline: aguardando liberação da chave google. (erro: {e})")
+        # Mensagem discreta de erro de conexão
+        st.error(f"sistema em espera: aguardando protocolo google. ({e})")
 else:
-    st.markdown("<br><center><p style='color:#555;'>conecte a chave para despertar o sistema.</p></center>", unsafe_allow_html=True)
+    st.markdown("<br><center><p style='color:#444; font-family:Orbitron; font-size:12px;'>conecte a chave para despertar o g.u.i.m.e.l.</p></center>", unsafe_allow_html=True)
