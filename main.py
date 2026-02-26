@@ -3,47 +3,47 @@ import google.generativeai as genai
 import os
 
 # 1. Configuração da Página
-st.set_page_config(page_title="g.u.i.m.e.l. os", page_icon="logo.png", layout="centered")
+st.set_page_config(page_title="G.U.I.M.E.L. OS", page_icon="logo.png", layout="centered")
 
-# CSS para Camuflagem Total, Fonte Futurista e Degradê Vibrante
+# CSS: Camuflagem Total, Fonte Futurista, Letras Maiúsculas e Degradê
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-    /* Fundo preto absoluto para camuflar o logo.png */
+    /* Fundo preto absoluto para camuflagem total do logo.png */
     .stApp {
         background-color: #000000;
     }
     
-    /* Container do Título */
     .title-container {
         text-align: center;
-        margin-top: -20px;
+        margin-top: -30px;
     }
 
-    /* Título com o degradê da penúltima tentativa */
+    /* Título em Maiúsculas com degradê Laranja/Amarelo/Branco */
     .title-guimel {
         font-family: 'Orbitron', sans-serif;
-        font-size: 42px;
+        font-size: 45px;
+        font-weight: 700;
         background: linear-gradient(to right, #FF4B2B, #FFB100, #FFFFFF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-transform: lowercase;
-        letter-spacing: 4px;
+        text-transform: uppercase;
+        letter-spacing: 6px;
         margin-bottom: 0px;
     }
 
-    /* Subtítulo em Amarelo/Laranja suave */
+    /* Subtítulo em Maiúsculas */
     .subtitle {
         font-family: 'Orbitron', sans-serif;
         color: #FFB100;
         font-size: 14px;
-        text-transform: lowercase;
-        letter-spacing: 2px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
         opacity: 0.8;
     }
 
-    /* Limpeza total de bordas e sombras da imagem */
+    /* Remove molduras da imagem para camuflagem perfeita */
     [data-testid="stImage"] img {
         border: none !important;
         box-shadow: none !important;
@@ -52,30 +52,27 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Centralização do Logo (logo.png)
+# 2. Brasão Central (Camuflado)
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     if os.path.exists("logo.png"):
         st.image("logo.png", use_container_width=True)
-    else:
-        # Fallback caso o arquivo ainda não tenha sido processado no GitHub
-        st.markdown("<h1 style='color:#FFB100; text-align:center; font-family:Orbitron;'>λ</h1>", unsafe_allow_html=True)
 
-# Identidade Visual
+# Identidade Visual em Maiúsculas
 st.markdown("""
     <div class="title-container">
-        <p class="title-guimel">λ g.u.i.m.e.l.</p>
-        <p class="subtitle">sistemas logísticos e teológicos online</p>
+        <p class="title-guimel">λ G.U.I.M.E.L.</p>
+        <p class="subtitle">Sistemas Logísticos e Teológicos Online</p>
     </div>
     """, unsafe_allow_html=True)
 
-# 3. Terminal na Barra Lateral
+# 3. Sidebar (Terminal de Comando)
 with st.sidebar:
-    st.markdown("<h2 style='color:#FFB100; font-family:Orbitron; font-size:18px;'>terminal</h2>", unsafe_allow_html=True)
-    api_key = st.text_input("chave de protocolo", type="password")
+    st.markdown("<h2 style='color:#FFB100; font-family:Orbitron; font-size:18px; text-transform: uppercase;'>TERMINAL</h2>", unsafe_allow_html=True)
+    api_key = st.text_input("CHAVE DE PROTOCOLO", type="password")
     st.markdown("<hr style='border: 0.5px solid #222;'>", unsafe_allow_html=True)
 
-# 4. Processamento da Inteligência (Gemini 1.5 Flash)
+# 4. Motor da IA (Gemini 1.5 Flash)
 if api_key:
     try:
         genai.configure(api_key=api_key)
@@ -86,13 +83,13 @@ if api_key:
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
-        # Renderização do Histórico
+        # Histórico de Chat
         for msg in st.session_state.messages:
             with st.chat_message(msg["role"]):
-                st.markdown(f"<span style='font-family:Orbitron; color:#ddd;'>{msg['content']}</span>", unsafe_allow_html=True)
+                st.markdown(f"<span style='font-family:Orbitron; color:#eee;'>{msg['content']}</span>", unsafe_allow_html=True)
 
         # Entrada de Comandos
-        if prompt := st.chat_input("comando, senhor?"):
+        if prompt := st.chat_input("Comando, Senhor?"):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
@@ -103,6 +100,6 @@ if api_key:
                 st.markdown(response.text)
                 
     except Exception as e:
-        st.error(f"sistema em standby: erro de conexão ({e})")
+        st.error(f"SISTEMA EM STANDBY: {e}")
 else:
-    st.markdown("<br><center><p style='color:#444; font-family:Orbitron; font-size:10px;'>insira a chave para despertar o núcleo.</p></center>", unsafe_allow_html=True)
+    st.markdown("<br><center><p style='color:#333; font-family:Orbitron; font-size:10px; text-transform: uppercase;'>INSIRA A CHAVE PARA DESPERTAR O NÚCLEO.</p></center>", unsafe_allow_html=True)
